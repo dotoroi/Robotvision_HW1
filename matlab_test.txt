@@ -1,0 +1,119 @@
+로봇 비전 HW1
+due date : 10월 13일 23:59
+코드 작성한 후 본인의 Github에 업로드하고 Repository URL을 적으세요. 
+GitHub URL : 
+
+% image 정보 불러오기
+img = imread("background.jpg");
+img_rec = insertShape(img, 'Rectangle', [722 368 70 177], 'Color', "red", 'LineWidth', 3);      % 사각형 그리기
+img_rec = insertShape(img_rec, 'FilledCircle', [760 545 10], 'Color', "blue", 'LineWidth', 10); 
+figure(2);
+imshow(img_rec);
+
+임의의 카메라의 설치 위치와 각도에 따라 사람의 발(파란 점)의 3차원 좌표를 구하는 Matlab 코드를 작성하세요. 
+
+(Xc, Yc, Zc)
+
+World Coordinate 원점에 대한 카메라의 위치는 다음과 같다.
+
+카메라의 위치는 R과 t로 주어진다. 
+
+
+
+f_x = 1000 pixel, f_y = 1000 pixel
+c_x = 640 pixel, c_y = 480 pixel 광축 이미지 평면
+
+이미지 size : 1280*720
+이미지 상 파란 점의 위치 : (760, 545)
+
+% Intrinsic Parameters
+fx = 1000;
+fy = 1000;
+cx = 640;
+cy = 480;
+
+K = fx 0 cx // 0 fy cy // 0 0 1
+
+P = [R|t]
+
+P' = (760, 545)
+
+% 파란점의 픽셀 위치
+u = 760;
+v = 545;
+
+% 임의의 카메라 설치 위치
+theta_x = pi/2 - pi/6;  % x축 각도
+theta_y = -pi/2;        % y축 각도
+theta_z = pi/2;         % z축 각도
+% 위치
+tx = 0;
+ty = -5;
+tz = 0.2
+
+0 -5 0.2 // = R * 0 0 0 // + t
+
+미터 단위 위치 500cm 높이, 20cm 뒤 카메라 초점거리 1000 1000 픽셀
+초점 좌표 640 480 픽셀
+
+이미지 크기 1280 720 픽셀
+
+파란점의 픽셀 위치 760 545
+
+픽셀 좌표계 기준 1280 * 720에서 pimg 760 545 
+
+FOV 
+
+
+
+
+% Camera Matrix? K
+
+K = [fx 0 cx ; 0 fy cy ; 0 0 1];
+
+K = 1000 0 640 
+	0 1000 480
+	0	0	 1
+	
+
+
+Pimg = K * P'
+
+% Rotation Matrix?
+
+theta_x = pi/2 - pi/6;  % x축 각도
+theta_y = -pi/2;        % y축 각도
+theta_z = pi/2;         % z축 각도
+
+xyz 회전행렬
+
+r1 r2 r3
+
+R = r1 *r2 *r3 *T = tx ty tz 1 ^T
+
+Rz = [ cos(theta_z) -sin(theta_z) 0; sin(theta_z) cos(theta_z) 0; 0 0 1 ];
+
+Ry = [ cos(theta_y) 0 sin(theta_y); 0 1 0; -sin(theta_y) 0 cos(theta_y) ];
+
+Rx = [ 1 0 0 ; 0 cos(theta_x) -sin(theta_x); 0 sin(theta_x) cos(theta_x) ];
+
+R = Rz * Ry * Rx;
+
+% Translation Matrix?
+
+변환 행렬
+
+t = [tx ; ty; tz ] - R*[0;0;0];
+
+C = -R^-1* T = -R^T * T (카메라 위치)
+
+% World Coordinate 좌표 값?
+
+P = (Xw, Yw, Zw) (cm) Zw = 0
+
+(Xc, Yc, Zc) (pixel) ~ (u, v, 1)
+
+
+
+
+
