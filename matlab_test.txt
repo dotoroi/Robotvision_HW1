@@ -113,6 +113,8 @@ P = (Xw, Yw, Zw) (cm) Zw = 0
 
 (Xc, Yc, Zc) (pixel) ~ (u, v, 1)
 
+강의자료 메모 뒤늦게 확인
+
 
 
 
